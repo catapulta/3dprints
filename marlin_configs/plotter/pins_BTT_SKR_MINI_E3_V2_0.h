@@ -42,7 +42,7 @@
 #endif
 
 // Copy values from heater 0 to heater 1 for pen as E1
-#define HEATER_1_PIN                        PA8 //PC8   // "HE"
+#define HEATER_1_PIN                        PA8 // Use NeoPixel pin to fool heater
 #define E1_ENABLE_PIN                       PD2
 #define E1_STEP_PIN                         PB3
 #define E1_DIR_PIN                          PB4
@@ -89,3 +89,4 @@
     #define E0_SLAVE_ADDRESS 3
   #endif
 #endif
+
