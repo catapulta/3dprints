@@ -354,7 +354,7 @@
 // For the other hotends it is their distance from the extruder 0 hotend.
 #define HOTEND_OFFSET_X { 0.0, 1.5 } // (mm) relative X-offset for each nozzle
 #define HOTEND_OFFSET_Y { 0.0, -34.4 }  // (mm) relative Y-offset for each nozzle
-#define HOTEND_OFFSET_Z { 0.0, 0.0 }  // (mm) relative Z-offset for each nozzle
+#define HOTEND_OFFSET_Z { 0.0, -3.0 }  // (mm) relative Z-offset for each nozzle
 
 // #define HOTEND_OFFSET_X { 0.0 } // (mm) relative X-offset for each nozzle
 // #define HOTEND_OFFSET_Y { -57.00 }  // (mm) relative Y-offset for each nozzle
@@ -1384,7 +1384,7 @@
 
 // The size of the printable area
 #define X_BED_SIZE 235
-#define Y_BED_SIZE 235
+#define Y_BED_SIZE 205
 
 // Travel limits (mm) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
@@ -1617,7 +1617,7 @@
 #if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 12
+  #define GRID_MAX_POINTS_X 5
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Probe along the Y axis, advancing X after each column
@@ -1900,7 +1900,7 @@
   #define NOZZLE_PARK_POINT { (X_MIN_POS + 10), (Y_MAX_POS - 10), 20 }
   //#define NOZZLE_PARK_X_ONLY          // X move only is required to park
   //#define NOZZLE_PARK_Y_ONLY          // Y move only is required to park
-  #define NOZZLE_PARK_Z_RAISE_MIN   2   // (mm) Always raise Z by at least this distance
+  #define NOZZLE_PARK_Z_RAISE_MIN  10   // (mm) Always raise Z by at least this distance
   #define NOZZLE_PARK_XY_FEEDRATE 100   // (mm/s) X and Y axes feedrate (also used for delta Z axis)
   #define NOZZLE_PARK_Z_FEEDRATE    5   // (mm/s) Z axis feedrate (not used for delta printers)
 #endif
