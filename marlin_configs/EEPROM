@@ -1,0 +1,18 @@
+; Filament settings (Disabled):
+  M200 S0 D1.75
+; Steps per unit:
+  M92 X80.00 Y80.00 Z400.00 E412.10
+; Hotend PID:
+  M301 P21.73 I1.54 D76.55
+; Z-Probe Offset:
+  M851 X-59.00 Y-28.00 Z-3.20 ; (mm)
+; Stepper driver current:
+  M906 X290 Y290 Z580
+  M906 T0 E450
+; Driver stepping mode:
+  M569 S1 X Y Z
+  M569 S1 T0 E
+; Linear Advance:
+  M900 K0.15
+; Filament load/unload:
+  M603 L2.00 U1.00 ; (mm)
