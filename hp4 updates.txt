@@ -1,0 +1,333 @@
+VEZ 3D Odrive 3d printer setup:
+
+https://www.youtube.com/watch?v=1XzD7lGNaek
+
+Updating ODESC:
+https://www.reddit.com/r/stm32f4/comments/y7akce/it_is_possible_to_backup_the_firmware_from_this/
+
+Replacing firmware for Tronxy STM32 board
+https://www.youtube.com/watch?v=9xb1dFg0ymA Part 1
+https://www.youtube.com/watch?v=N1FaKO5QziE Part 2
+
+Enable bootloader mode
+https://learn.adafruit.com/adafruit-stm32f405-feather-express/dfu-bootloader-details
+
+ODESC Demo Guy
+Carelsbergh Stijn
+
+Use a CAN hat + __ for effector
+- https://www.adafruit.com/product/4759 (SAME51, 21 GPIO, $25)
+- https://www.youtube.com/watch?v=XkcxSQhRR3I
+- https://lukeslabonline.com/products/huvud
+- CANPico (Pi Pico w/CAN bus) has plenty GPIO
+- https://www.amazon.com/RS485-CAN-HAT-Long-Distance-Communication/dp/B07VMB1ZKH
+
+Cisco Catalyst Power Supply
+1X3L Fan Speed Temp Controller
+https://www.aliexpress.us/item/2251832778599294.html
+https://www.youtube.com/watch?v=NBcCFYZhU_0
+
+## CAN connection via Manta:
+Step 1: Flash with canboot + klipper (canboot allows flashing without setting in dfu)
+- To flash, set in dfu mode by pressing and holding boot, then press/release reset, then releasing boot
+- CanBoot allows flashing without setting in dfu
+- Important params:
+	- CanBoot (used 10cc588874cc0dd103fd8d0275e17f7d9d2c42bf):
+		    Micro-controller Architecture (STMicroelectronics STM32)  --->
+			Processor model (STM32G0B1)  --->
+			Build CanBoot deployment application (Do not build)  --->
+			Clock Reference (8 MHz crystal)  --->
+			Communication interface (CAN bus (on PD12/PD13))  --->
+			Application start offset (8KiB offset)  --->
+		(250000) CAN bus speed
+		()  GPIO pins to set on bootloader entry
+		[*] Support bootloader entry on rapid double click of reset button
+		[ ] Enable bootloader entry on button (or gpio) state
+		[ ] Enable Status LED
+
+	- Klipper (used commit a8b1b0ef0572f07f04f0d68969ef042fff290fa7):
+		[*] Enable extra low-level configuration options
+			Micro-controller Architecture (STMicroelectronics STM32)  --->
+			Processor model (STM32G0B1)  --->
+			Bootloader offset (8KiB bootloader)  --->
+			Clock Reference (8 MHz crystal)  --->
+			Communication interface (USB to CAN bus bridge (USB on PA11/PA12))  --->
+			CAN bus interface (CAN bus (on PD12/PD13))  --->
+			USB ids  --->
+		(250000) CAN bus speed
+		()  GPIO pins to set at micro-controller startup
+
+Put the Manta in DFU mode: Press equally Boot0 AND Reset (on the Manta board), relese Reset and then release Boot0
+lsusb should give you:
+Bus 001 Device 008: ID 0483:df11 STMicroelectronics STM Device in DFU Mode
+
+sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force:mass-erase -d 0483:df11
+sudo dfu-util -a 0 -d 0483:df11 --dfuse-address 0x08002000:force:leave -D ~/klipper/out/klipper.bin
+
+You should now see with lsusb:
+Bus 001 Device 011: ID 1d50:606f OpenMoko, Inc. Geschwister Schneider CAN adapter
+
+If your other CAN0 network is correct you should now be up'n running.
+By the way, I choose baud 250000 since this was adviced by several sources
+
+You will not be able to update your Manta M8P with "python3 ~/CanBoot/scripts/flash_can.py -u UUID" since the CAN0 network goes down, so this have to be a manual operation with DFU mode as far as I have found out, for both CanBoot and Klipper. Other CAN devices you can update through "python3 ~/CanBoot/scripts/flash_can.py -u UUID"
+
+
+Step 2: Set baud rate in CB1, https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode
+sudo vim /etc/network/interface.d/can0
+allow-hotplug can0
+iface can0 can static
+    bitrate 1000000
+    up ifconfig $IFACE txqueuelen 128
+   
+ifconfig should show a can network now
+
+Step 3: find can uuid (won't appear once connected):
+~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
+
+Step 4: (easier in mainsail) Set in klipper's printer.cfg (no serial). Example:
+[mcu]
+canbus_uuid:951d92e7b2fa
+
+Resources:
+# pay attention to printer.cfg, text can be translated and can be useful
+https://www.youtube.com/watch?v=ekbxtDS_8cM
+# flash instructions
+https://github.com/Arksine/CanBoot/issues/61#issuecomment-1405721325
+# proper commands
+https://github.com/Arksine/CanBoot/issues/61#issuecomment-1405785792
+# no canboot install
+https://github.com/bigtreetech/Manta-M8P/issues/30#issuecomment-1429197885
+
+## BTT EBB:
+Step 1: Flash with canboot + klipper
+- Connect to Manta
+- To flash, set in dfu mode by pressing and holding boot, then press/release reset, then releasing boot
+- CanBoot later allows flashing without setting in dfu
+- Use `make menuconfig` inside of canboot dir to set the next options:
+- Important params:
+	- CanBoot (used 10cc588874cc0dd103fd8d0275e17f7d9d2c42bf):
+			Micro-controller Architecture (STMicroelectronics STM32)  --->
+			Processor model (STM32G0B1)  --->
+			Build CanBoot deployment application (Do not build)  --->
+			Clock Reference (8 MHz crystal)  --->
+			Communication interface (CAN bus (on PB0/PB1))  --->
+			Application start offset (8KiB offset)  --->
+		(250000) CAN bus speed
+		()  GPIO pins to set on bootloader entry
+		[*] Support bootloader entry on rapid double click of reset button
+		[ ] Enable bootloader entry on button (or gpio) state
+		[ ] Enable Status LED
+		
+	- Use make to build
+	- Check usb identifier (eg 0483:df11)
+	- Flash to EBB: sudo dfu-util -a 0 -D ~/CanBoot/out/canboot.bin --dfuse-address 0x08000000:force:mass-erase -d 0483:df11
+
+	- cd to `klipper` repo
+	- Configure with `make menuconfig`, build using `make`
+	- Klipper (used commit a8b1b0ef0572f07f04f0d68969ef042fff290fa7):
+		[*] Enable extra low-level configuration options
+			Micro-controller Architecture (STMicroelectronics STM32)  --->
+			Processor model (STM32G0B1)  --->
+			Bootloader offset (8KiB bootloader)  --->
+			Clock Reference (8 MHz crystal)  --->
+			Communication interface (CAN bus (on PB0/PB1))  --->
+		(250000) CAN bus speed
+		()  GPIO pins to set at micro-controller startup
+	- Flash to EBB: sudo dfu-util -a 0 -d 0483:df11 --dfuse-address 0x08002000:force:leave -D ~/klipper/out/klipper.bin
+	
+Step 2: (easier in mainsail), connect CAN, then find CAN uuid (won't appear once paired through CAN):
+~/klippy-env/bin/python ~/klipper/scripts/canbus_query.py can0
+
+Step 3: Set in klipper's printer.cfg (no serial). Example:
+[mcu ebb]
+canbus_uuid:44c397e53acd
+
+Resources:
+https://maz0r.github.io/klipper_canbus/toolhead/ebb36-42_v1.1.html
+https://www.youtube.com/watch?v=_FELCN8CbWA
+
+U2C (USB to CAN)
+
+Flash:
+1. Plug in via USB C while holding BOOT to put in dfu mode
+2. Device should appear as dfu device when using `lsusb`
+3. Flash U2C_V2_STM32G0B1.bin (here or in https://github.com/bigtreetech/U2C/blob/b195e64cb570adefeaf2b5b62a5d57fc957094f9/firmware/U2C_V2_STM32G0B1.bin)
+4. sudo vim /etc/network/interfaces.d/can1
+5. Add the following:
+allow-hotplug can1
+iface can1 can static
+    bitrate 1000000
+    up ifconfig $IFACE txqueuelen 128
+6. Disconnect (may need reboot)
+7. ifconfig should show can0 and can1 now
+
+Rename network
+1. write down ID_SERIAL_SHORT amd ID_MODEL from udevadm info -p /sys/class/net/can0
+2. write down ID_SERIAL_SHORT from udevadm info -p /sys/class/net/can1
+  or more easily udevadm info -p /sys/class/net/can1
+3. sudo vim /etc/systemd/network/62-klippercan.link  (number doesn't seem to matter?)
+[Match]
+Property=ID_MODEL="stm32g0b1xx" ID_SERIAL_SHORT="5D002A0009504B4633373520"
+
+[Link]
+# from systemd.link manpage:
+# Note that specifying a name that the kernel might use for another interface (for example "eth0") is dangerous because the name assignment done by udev will race with the assignment done by the kernel, and only one
+#   interface may use the name. Depending on the order of operations, either udev or the kernel will win, making the naming unpredictable. It is best to use some different prefix
+
+Name=klippercan
+
+(it's also possible to setup details in  61-odrivecan.network)
+
+
+4. sudo vim /etc/network/interfaces.d/klippercan
+allow-hotplug klippercan
+iface klippercan can static
+    bitrate 1000000
+    up ifconfig $IFACE txqueuelen 128
+
+5. sudo vim /etc/systemd/network/60-odrivecan.link
+[Match]
+Property=ID_MODEL="budgetcan_gs_usb" ID_SERIAL_SHORT="0018003D4D4D500B20383835"
+
+[Link]
+# from systemd.link manpage:
+# Note that specifying a name that the kernel might use for another interface (for example "eth0") is dangerous because the name assignment done by udev will race with the assignment done by the kernel, and only one
+#   interface may use the name. Depending on the order of operations, either udev or the kernel will win, making the naming unpredictable. It is best to use some different prefix
+
+Name=odrivecan
+
+6. sudo vim /etc/network/interfaces.d/odrivecan
+allow-hotplug odrivecan
+iface odrivecan can static
+    bitrate 1000000
+    up ifconfig $IFACE txqueuelen 128
+
+7. Use ifconfig to check, both odrivecan and klippercan should be available now
+8. sudo udevadm control --reload-rules
+9. sudo reboot now
+10. Check status with  ip -details link show odrivecan
+
+CAN Diagnosis
+- candump -c -c -xtd odrivecan
+- python -m can.viewer -c "odrivecan" -i "socketcan"  (nicer than candump)
+- make sure heartbeat, node_id are correct in odrive
+- make sure bus speed is aligned in rpi and odrive
+
+
+Teaching Tech
+https://www.youtube.com/watch?v=5pLjeQz9pEI
+
+Android Screen
+https://www.youtube.com/watch?v=TcgTrkA8Oj0
+
+BTT EBB:
+https://github.com/Klipper3d/klipper/pull/6080
+https://www.youtube.com/watch?v=_FELCN8CbWA
+https://maz0r.github.io/klipper_canbus/toolhead/ebb36-42_v1.1.html
+
+
+Ropes (dyneema sk99)
+https://www.murrays.com/product/robline-sk99-1-1mm-mini-reel/?attribute_pa_color=red ($66 60m)
+https://www.coastwatersports.com/13mm-marlow-kiteline-race-99-dyneema-sk99-metre-p-22775.html ($0.81 1m)
+https://coliesail.com/kiteline-by-marlow.html ($1 1m ?)
+https://www.ebay.com/itm/195479285106?hash=item2d83792d72:g:dFoAAOSwy-le-JiP ($6.67 10m, Braidtech)
+https://www.rope.com/products/kiteline-race-sporting-rope?variant=32931182477346 ($110 100m)
+https://www.caveexploration.org/gear/4mm-d12-dyneema-marlow ($230 100m)
+https://www.rope44.com/products/marlow-kiteline-race-spool?variant=42080348274868 (uk)
+https://oceanrope.com/page/1/?s=dyneema&post_type=product (uk)
+https://www.maximropes.com/home/
+https://www.neropes.com/
+https://www.roblineropes.com/en/
+or go for sk78? sk60?)
+
+## Spool and flex compensation
+https://github.com/Duet3D/RepRapFirmware/pull/562/files#diff-c8c9b95fb9c9a15187a8f80e34ffbb8001316f6b202f26366f59fa6507e93464
+
+Flex: find each line's forces:
+- given xyz, anchors -> compute_f_line(xyz, anchors) = f_line
+- we want the sum of forces in xyz to be 0 (including gravity) -> decompose(f_line) = f_x, f_y, f_z
+- but want individual forces in xyz to be equal to holding_force -> decompose(f_line) = f_x, f_y, f_z
+- and no cable force negative or higher than max_force
+
+
+Klipper works by calling python file of the same name
+https://www.klipper3d.org/Code_Overview.html#adding-a-host-module
+
+# Odrive Control
+
+## Add Macros for ODrive control
+
+HP4 config files:
+Info file:
+https://gitlab.com/tobben/hangprinter/-/blob/version_4/firmware/ODrive/configure_odrive.py
+Actual AB config file (CD is exact same except for node_id):
+https://gitlab.com/tobben/hangprinter/-/blob/8733b8ed3dcde1f1489dee44e373838fd8b7464c/firmware/ODrive/odrive-config-AB.json
+
+Possible to connect via:
+1. USB (odrivetool SDK)
+2. UART (https://github.com/odriverobotics/ODrive/tree/master/Arduino/ODriveArduino)
+3. CAN (https://docs.odriverobotics.com/v/latest/can-guide.html)
+
+Easiest will be to connect via USB (or UART) and use the Python SDK (odrivetool) or ASCII
+https://docs.odriverobotics.com/v/0.5.6/native-protocol.html#python
+
+Also, a USB-to-CAN interface might be easy:
+1. Create a new canbus interface setting `canbus_interface` under mcu (default can0)
+2. Set up Linux so it doesn't reboot weird: https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode
+
+Alternatively, use an RP2040 + Waveshare SN65HVD230 CAN Hat as described here:
+https://www.reddit.com/r/klippers/comments/wl4t93/skrpico_as_canbus_bridge/
+Or https://canable.io/
+
+See klippy\extras\mcp4018.py for an example of code using I2C to talk to digipot
+config file using it is config\generic-mightyboard.cfg
+
+https://www.klipper3d.org/Code_Overview.html
+https://github.com/Klipper3d/klipper/blob/master/klippy/kinematics/winch.py
+https://github.com/Klipper3d/klipper/blob/master/klippy/chelper/kin_winch.c
+
+Objective: 
+Calibrate printer
+a) Implement torque and position modes
+b) Wrap these commands into a calibration utility
+c) Interface with Klipper commands
+To talk via CAN, from CAN example below, use can, cantools and odrive can dbc
+1. CANSimple Protocol defines CMD ID, which is added to arbitration_id in can.Message
+2. For can.Message data, db.encode_message uses the dbc file to translate dictionary of options (?).
+
+# CAN protocol
+https://docs.odriverobotics.com/v/0.5.6/can-protocol.html
+
+# CAN Guide
+https://docs.odriverobotics.com/v/0.5.6/can-guide.html
+
+# ODrive CAN example using ODrive CAN DBC
+https://github.com/odriverobotics/ODrive/blob/master/tools/can_dbc_example.py
+
+## ODrive CAN dictionary Teensy
+https://github.com/Malaphor/ODriveTeensyCAN
+
+
+Tobben PRs:
+https://github.com/odriverobotics/ODrive/issues/688
+https://github.com/odriverobotics/ODrive/pull/680
+
+https://github.com/Duet3D/RepRapFirmware/pull/568/commits/8d303e276c878cb4f8c259021868b0e464323d04
+
+## SKR Pico (Cheaper) Alternative for Manta
+https://www.reddit.com/r/klippers/comments/wl4t93/skrpico_as_canbus_bridge/
+
+
+## Set Board in Step/Dir Mode
+https://caggius.wordpress.com/legacy-programming-stepper-drivers/
+
+## CAN-BUS Cable
+https://www.reddit.com/r/AskElectronics/comments/d7i6dk/canbus_wiring/
+
+120 Ohm $4.92 19AWG (only shielded one in stock in digikey) https://www.digikey.com/en/products/detail/te-connectivity-aerospace-defense-and-marine/2019D0309-0/5294821
+120 Ohm $1.70 20AWG (unshielded) https://www.mouser.com/ProductDetail/TE-Connectivity-Raychem/2020D0309-0?qs=TjgN8cdPo56RHyi2Qci0Pg%3D%3D
+120 Ohm $1.86 21AWG (shielded) https://www.mouser.com/ProductDetail/TE-Connectivity-Raychem/2021D0309-0?qs=dzerabv%252BWWs6MDz4ErExWQ%3D%3D
+120 Ohm $1.25 24AWG (shielded, min 100 ft) https://www.lapptannehill.com/2170260-lapp-unitronic-reg-bus-can-cable-24-awg-1-pair-violet
+100 Ohm $0.25 (cat6, 50ft) https://www.ebay.com/itm/235005071785
+100 Ohm $0.20 (cat6, 50ft) https://www.ebay.com/itm/285285873089
