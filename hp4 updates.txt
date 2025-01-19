@@ -74,7 +74,7 @@ You will not be able to update your Manta M8P with "python3 ~/CanBoot/scripts/fl
 
 
 Step 2: Set baud rate in CB1, https://www.klipper3d.org/CANBUS.html#usb-to-can-bus-bridge-mode
-sudo vim /etc/network/interface.d/can0
+sudo vim /etc/network/interfaces.d/can0
 allow-hotplug can0
 iface can0 can static
     bitrate 1000000
