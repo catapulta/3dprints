@@ -1,0 +1,4 @@
+.DS_Store
+
+# Contains the WiFi PSK -- never commit to this public repo.
+wpa_supplicant.conf

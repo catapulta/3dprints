@@ -1,0 +1,13 @@
+--- heater_bed.py.orig	2026-09-18 14:46:18
++++ heater_bed.py	2026-09-18 14:46:17
+@@ -19,8 +19,8 @@
+     def cmd_M140(self, gcmd, wait=False):
+         # Set Bed Temperature
+         temp = gcmd.get_float('S', 0.)
+-        if temp > self.max_temp - 15.0:
+-            temp = self.max_temp - 15.0
++        if temp > self.max_temp:
++            temp = self.max_temp
+         pheaters = self.printer.lookup_object('heaters')
+         pheaters.set_temperature(self.heater, temp, wait)
+     def cmd_M190(self, gcmd):
