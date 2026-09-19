@@ -1,0 +1,29 @@
+{
+	"bottom_solid_infill_flow_ratio": "0.95",
+	"brim_object_gap": "0.06",
+	"brim_type": "outer_only",
+	"brim_width": "9",
+	"elefant_foot_compensation": "0.05",
+	"enable_prime_tower": "0",
+	"from": "User",
+	"inherits": "0.20mm Standard @Creality K1 (0.4 nozzle)",
+	"name": "0.20mm @Creality K1 (0.4 nozzle)",
+	"notes": "XY Compensation Calibrated for Kingroon ABS\nhttps://www.orcaslicer.com/wiki/calibration/tolerance_calib.html#orca-tolerance-test",
+	"post_process": [
+		"# sh /Users/aldo/Downloads/bye_F0.sh"
+	],
+	"precise_z_height": "1",
+	"print_extruder_id": [
+		"1"
+	],
+	"print_extruder_variant": [
+		"Direct Drive Standard"
+	],
+	"print_settings_id": "0.20mm @Creality K1 (0.4 nozzle)",
+	"version": "2.0.2.0",
+	"wall_generator": "arachne",
+	"wall_loops": "3",
+	"wall_sequence": "inner-outer-inner wall",
+	"xy_contour_compensation": "0.03",
+	"xy_hole_compensation": "0.09"
+}

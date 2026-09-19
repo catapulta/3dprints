@@ -1,0 +1,23 @@
+{
+    "fan_kickstart": "0.6",
+    "fan_speedup_time": "0.3",
+    "from": "User",
+    "inherits": "Creality K1 (0.4 nozzle)",
+    "is_custom_defined": "0",
+    "layer_change_gcode": "SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num+1}\n",
+    "machine_start_gcode": "M82; absolute extrusion mode\nSET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]\nM140 S0\nM104 S0 \nSTART_PRINT EXTRUDER_TEMP=[nozzle_temperature_initial_layer] BED_TEMP=[bed_temperature_initial_layer_single]\n",
+    "name": "Creality K1 (0.6 nozzle) - Online",
+    "nozzle_diameter": [
+        "0.6"
+    ],
+    "print_host": "192.168.1.62",
+    "printer_settings_id": "Creality K1 (0.6 nozzle) - Online",
+    "retraction_length": [
+        "0.5"
+    ],
+    "time_lapse_gcode": "TIMELAPSE_TAKE_FRAME",
+    "version": "2.0.1.0",
+    "z_hop_types": [
+        "Spiral Lift"
+    ]
+}

@@ -1,0 +1,28 @@
+{
+    "default_filament_colour": [
+        "#C6FFC6"
+    ],
+    "fan_max_speed": [
+        "80"
+    ],
+    "fan_min_speed": [
+        "80"
+    ],
+    "filament_max_volumetric_speed": [
+        "3.4"
+    ],
+    "filament_settings_id": [
+        "TPU"
+    ],
+    "filament_vendor": [
+        "Hatchbox"
+    ],
+    "from": "User",
+    "inherits": "Creality Generic TPU",
+    "is_custom_defined": "0",
+    "name": "TPU",
+    "nozzle_temperature": [
+        "245"
+    ],
+    "version": "1.9.0.2"
+}

@@ -1,0 +1,56 @@
+{
+    "before_layer_change_gcode": ";BEFORE_LAYER_CHANGE\n;[layer_z]\nG92 E0\n",
+    "change_filament_gcode": "PAUSE",
+    "fan_kickstart": "0.5",
+    "fan_speedup_time": "0.2",
+    "from": "User",
+    "gcode_flavor": "klipper",
+    "inherits": "Anycubic Chiron 0.4 nozzle",
+    "is_custom_defined": "0",
+    "layer_change_gcode": "SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num+1}\n",
+    "machine_end_gcode": "END_PRINT",
+    "machine_max_acceleration_x": [
+        "3000",
+        "960"
+    ],
+    "machine_max_acceleration_z": [
+        "300",
+        "200"
+    ],
+    "machine_max_speed_x": [
+        "600",
+        "100"
+    ],
+    "machine_max_speed_y": [
+        "600",
+        "100"
+    ],
+    "machine_max_speed_z": [
+        "20",
+        "12"
+    ],
+    "machine_pause_gcode": "PAUSE",
+    "machine_start_gcode": "M82; absolute extrusion mode\nSET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]\nSTART_PRINT EXTRUDER_TEMP=[nozzle_temperature_initial_layer] BED_TEMP=[bed_temperature_initial_layer_single]\n",
+    "max_layer_height": [
+        "0.6"
+    ],
+    "min_layer_height": [
+        "0.2"
+    ],
+    "name": "Anycubic Chiron 0.6 nozzle",
+    "nozzle_diameter": [
+        "0.6"
+    ],
+    "nozzle_type": "hardened_steel",
+    "print_host": "192.168.1.61",
+    "printer_settings_id": "Anycubic Chiron 0.6 nozzle",
+    "retraction_length": [
+        "0.65"
+    ],
+    "thumbnails": "100x100/PNG, 320x320/PNG",
+    "time_lapse_gcode": ";TIMELAPSE_TAKE_FRAME",
+    "version": "2.2.0.4",
+    "z_hop_types": [
+        "Spiral Lift"
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "brim_object_gap": "0.12",
+    "elefant_foot_compensation": "0.25",
+    "from": "User",
+    "inherits": "0.20mm Standard @Anycubic Chiron",
+    "initial_layer_line_width": "0.63",
+    "inner_wall_line_width": "0.66",
+    "internal_solid_infill_line_width": "0.66",
+    "is_custom_defined": "0",
+    "line_width": "0.66",
+    "name": "0.20mm Standard @Anycubic Chiron - 0.6 nozzle",
+    "outer_wall_line_width": "0.63",
+    "print_settings_id": "0.20mm Standard @Anycubic Chiron - 0.6 nozzle",
+    "sparse_infill_line_width": "0.66",
+    "support_line_width": "0.54",
+    "top_surface_line_width": "0.6",
+    "version": "2.2.0.4"
+}

@@ -1,0 +1,31 @@
+{
+    "default_filament_colour": [
+        "#C082FF"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_max_volumetric_speed": [
+        "15"
+    ],
+    "filament_settings_id": [
+        "PETG"
+    ],
+    "filament_vendor": [
+        "Retro D"
+    ],
+    "from": "User",
+    "inherits": "Creality Generic PETG",
+    "is_custom_defined": "0",
+    "name": "PETG",
+    "nozzle_temperature": [
+        "260"
+    ],
+    "nozzle_temperature_range_high": [
+        "265"
+    ],
+    "pressure_advance": [
+        "0.058"
+    ],
+    "version": "1.9.0.2"
+}

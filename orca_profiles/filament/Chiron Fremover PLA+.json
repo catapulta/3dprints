@@ -1,0 +1,31 @@
+{
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_cost": [
+        "13"
+    ],
+    "filament_flow_ratio": [
+        "0.96"
+    ],
+    "filament_notes": [
+        "0.4 nozzle:\nCalibrated Flow at 0.96\nCalibrated PA at 0.2 (failed test, approx)\nCalibrated retraction at 2mm @195C (seems high for DD but works)\n\n0.6 nozzle:\nCalibrated Flow at 0.96\nCalibrated PA at 0.09"
+    ],
+    "filament_settings_id": [
+        "Chiron Fremover PLA+"
+    ],
+    "from": "User",
+    "inherits": "Anycubic Generic PLA",
+    "is_custom_defined": "0",
+    "name": "Chiron Fremover PLA+",
+    "nozzle_temperature": [
+        "195"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "195"
+    ],
+    "pressure_advance": [
+        "0.2"
+    ],
+    "version": "2.2.0.4"
+}

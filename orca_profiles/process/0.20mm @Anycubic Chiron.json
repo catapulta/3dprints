@@ -1,0 +1,18 @@
+{
+    "bottom_solid_infill_flow_ratio": "0.85",
+    "bridge_flow": "1",
+    "elefant_foot_compensation": "0.05",
+    "from": "User",
+    "inherits": "0.20mm Standard @Anycubic Chiron",
+    "initial_layer_line_width": "0.5",
+    "internal_solid_infill_line_width": "0.6",
+    "is_custom_defined": "0",
+    "line_width": "0.42",
+    "name": "0.20mm @Anycubic Chiron",
+    "only_one_wall_top": "1",
+    "outer_wall_line_width": "0.42",
+    "print_settings_id": "0.20mm @Anycubic Chiron",
+    "support_line_width": "0.42",
+    "top_surface_line_width": "0.42",
+    "version": "2.3.0.3"
+}

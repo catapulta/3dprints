@@ -1,0 +1,43 @@
+{
+    "additional_cooling_fan_speed": [
+        "100"
+    ],
+    "default_filament_colour": [
+        "#D0D0D0"
+    ],
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_max_volumetric_speed": [
+        "50"
+    ],
+    "filament_settings_id": [
+        "PLA Super Speed 20k"
+    ],
+    "filament_vendor": [
+        "Retro D"
+    ],
+    "from": "User",
+    "inherits": "Creality Generic PLA",
+    "is_custom_defined": "0",
+    "name": "PLA Super Speed 20k",
+    "nozzle_temperature": [
+        "230"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "225"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "pressure_advance": [
+        "0.024"
+    ],
+    "slow_down_layer_time": [
+        "2"
+    ],
+    "slow_down_min_speed": [
+        "300"
+    ],
+    "version": "1.9.0.2"
+}

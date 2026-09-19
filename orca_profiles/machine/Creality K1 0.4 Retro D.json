@@ -1,0 +1,8 @@
+{
+    "from": "User",
+    "inherits": "Creality K1 (0.4 nozzle)",
+    "is_custom_defined": "0",
+    "name": "Creality K1 0.4 Retro D",
+    "printer_settings_id": "Creality K1 0.4 Retro D",
+    "version": "1.9.0.2"
+}

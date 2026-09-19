@@ -1,0 +1,37 @@
+{
+    "enable_pressure_advance": [
+        "1"
+    ],
+    "filament_cost": [
+        "12"
+    ],
+    "filament_flow_ratio": [
+        "0.96"
+    ],
+    "filament_notes": [
+        "PA at 0.2+ (didn't check larger than that)"
+    ],
+    "filament_settings_id": [
+        "3DHoJor PETG"
+    ],
+    "from": "User",
+    "inherits": "Anycubic Generic PETG",
+    "is_custom_defined": "0",
+    "name": "3DHoJor PETG",
+    "nozzle_temperature": [
+        "230"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "230"
+    ],
+    "nozzle_temperature_range_high": [
+        "250"
+    ],
+    "nozzle_temperature_range_low": [
+        "230"
+    ],
+    "pressure_advance": [
+        "0.2"
+    ],
+    "version": "2.2.0.4"
+}

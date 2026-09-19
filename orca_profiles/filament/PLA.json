@@ -1,0 +1,31 @@
+{
+    "default_filament_colour": [
+        "#FFFFFF"
+    ],
+    "filament_max_volumetric_speed": [
+        "32"
+    ],
+    "filament_settings_id": [
+        "PLA"
+    ],
+    "filament_vendor": [
+        "Retro D"
+    ],
+    "from": "User",
+    "inherits": "Creality Generic PLA",
+    "is_custom_defined": "0",
+    "name": "PLA",
+    "nozzle_temperature": [
+        "235"
+    ],
+    "nozzle_temperature_initial_layer": [
+        "225"
+    ],
+    "nozzle_temperature_range_high": [
+        "240"
+    ],
+    "slow_down_layer_time": [
+        "4"
+    ],
+    "version": "1.9.0.2"
+}

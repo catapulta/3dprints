@@ -1,0 +1,48 @@
+{
+	"chamber_temperature": [
+		"50"
+	],
+	"enable_pressure_advance": [
+		"1"
+	],
+	"filament_cost": [
+		"12"
+	],
+	"filament_extruder_variant": [
+		"Direct Drive Standard"
+	],
+	"filament_flow_ratio": [
+		"0.91"
+	],
+	"filament_max_volumetric_speed": [
+		"16"
+	],
+	"filament_notes": [
+		"0.88, 0.5 retraction with CHT 0.4 Nozzle (increased to 0.85 retraction)\n0.89, 0.3 retraction with regular 0.4 Nozzle\n\n# Spool weighs 187g"
+	],
+	"filament_retraction_length": [
+		"0.85"
+	],
+	"filament_settings_id": [
+		"Kingroon ABS"
+	],
+	"filament_start_gcode": [
+		"; Filament gcode\nM141 S50"
+	],
+	"filament_vendor": [
+		"Kingroon"
+	],
+	"from": "User",
+	"inherits": "Creality Generic ABS",
+	"name": "Kingroon ABS",
+	"nozzle_temperature": [
+		"265"
+	],
+	"nozzle_temperature_initial_layer": [
+		"265"
+	],
+	"pressure_advance": [
+		"0.03"
+	],
+	"version": "2.0.2.0"
+}
