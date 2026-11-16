@@ -5,6 +5,7 @@
 	"fan_kickstart": "0.6",
 	"fan_speedup_time": "0.3",
 	"from": "User",
+	"host_type": "moonraker",
 	"inherits": "Creality K1 (0.4 nozzle)",
 	"layer_change_gcode": "SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num+1}\n",
 	"machine_start_gcode": "M82; absolute extrusion mode\nSET_PRINT_STATS_INFO TOTAL_LAYER=[total_layer_count]\nM140 S0\nM104 S0 \nSTART_PRINT EXTRUDER_TEMP=[nozzle_temperature_initial_layer] BED_TEMP=[bed_temperature_initial_layer_single]\n",
@@ -12,7 +13,8 @@
 		"0.4"
 	],
 	"name": "Creality K1 (0.4 nozzle) - Online",
-	"print_host": "192.168.1.62",
+	"print_host": "192.168.1.62:4409",
+	"printer_agent": "moonraker",
 	"printer_extruder_id": [
 		"1"
 	],

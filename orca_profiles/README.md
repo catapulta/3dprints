@@ -24,3 +24,14 @@ Presets inherit from Orca's bundled system profiles, so the matching vendor
 profiles must be installed in OrcaSlicer for them to load.
 
 `print_host` fields point at printers on the local network (192.168.1.x).
+
+## K1 print host
+
+The K1 runs rooted firmware: nginx serves Mainsail on port 4409 and proxies
+Moonraker. The K1 presets set `host_type` and `printer_agent` to `moonraker`
+with `print_host` `192.168.1.62:4409`, so Orca's Device tab shows Mainsail.
+Without an explicit `host_type` the presets inherit `crealityprint` from Orca's
+system Creality profile, which posts to `/upload/` on port 80 and gets HTTP 405.
+
+When Orca asks for the upload storage, pick `gcodes`; Moonraker only starts
+prints from that root.

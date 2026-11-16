@@ -2,6 +2,7 @@
     "fan_kickstart": "0.6",
     "fan_speedup_time": "0.3",
     "from": "User",
+    "host_type": "moonraker",
     "inherits": "Creality K1 (0.4 nozzle)",
     "is_custom_defined": "0",
     "layer_change_gcode": "SET_PRINT_STATS_INFO CURRENT_LAYER={layer_num+1}\n",
@@ -10,7 +11,8 @@
     "nozzle_diameter": [
         "0.2"
     ],
-    "print_host": "192.168.1.62",
+    "print_host": "192.168.1.62:4409",
+    "printer_agent": "moonraker",
     "printer_settings_id": "Creality K1 (0.2 nozzle) - Online",
     "retract_when_changing_layer": [
         "0"
