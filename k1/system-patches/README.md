@@ -3,6 +3,9 @@
 Modifications to files outside `printer_data/config`. These live in the stock
 firmware tree, so a Creality firmware update silently reverts them.
 
+The probe module replacement (`prtouch_v1_wrapper.py`) has its own directory,
+`k1/prtouch/`, with install and restore steps.
+
 ## heater_bed.py
 
 `/usr/share/klipper/klippy/extras/heater_bed.py`
@@ -39,8 +42,8 @@ run, and G28 fails with "No trigger on <axis> after full movement" (preceded by
 `CANCEL_PRINT` runs. Klipper stays up; no `FIRMWARE_RESTART`. Axes are left
 unhomed.
 
-Probing (KAMP's `BED_MESH_CALIBRATE`) runs inside prtouch_v2's closed
-`run_G29_Z()`, which never fires the homing-move events, so a probe in progress
+Probing (KAMP's `BED_MESH_CALIBRATE`) runs inside the prtouch probe module's
+`run_G29_Z()` (stock `.so` or `k1/prtouch/`), which never fires the homing-move events, so a probe in progress
 can't be interrupted. The module wraps `homing.probing_move` instead: while a
 cancel is pending, the next probe point fails with "Probing aborted by cancel
 request", so the mesh stops after the point in progress.
@@ -52,7 +55,7 @@ so the macro stops instead of continuing at the wrong temperature.
 `END_PRINT`, run by `CANCEL_PRINT`, turns the heaters off.
 
 Scope: X/Y homing, the gaps between probe points, and `M109`/`M190` waits.
-`G28 Z` runs prtouch_v2's closed `run_G28_Z()` (self-test plus three bed
+`G28 Z` runs the prtouch probe module's `run_G28_Z()` (self-test plus three bed
 descents onto the nozzle), which never fires the homing-move events, so a
 cancel during Z homing waits for it to finish. A cancel during
 `TEMPERATURE_WAIT`, a dwell, an ordinary move, `ACCURATE_HOME_Z` or the nozzle

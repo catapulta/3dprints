@@ -2,3 +2,8 @@
 
 # Contains the WiFi PSK -- never commit to this public repo.
 wpa_supplicant.conf
+
+# Agent prompt files and prtouch reverse-engineering artifacts (decompiled vendor code).
+.agent-prompts/
+k1/prtouch_re/
+k1/prtouch/private/
