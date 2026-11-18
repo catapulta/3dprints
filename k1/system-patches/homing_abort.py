@@ -20,6 +20,13 @@
 # BED_MESH_CALIBRATE (KAMP) stops after the point in progress. probe.py's
 # gcode:command_error handler then ends the multi-probe session.
 #
+# Heat waits (M109/M190) use Creality's can_break flag in heaters.py, the
+# one its "breakheater" webhook sets: the wait loop polls it once a second
+# and returns early. A bare break lets the macro carry on as if the target
+# were reached, so heaters._wait_for_temperature is wrapped to raise a
+# command error when the wait ended (or would start) while a cancel is
+# pending.
+#
 # Config: add an empty [homing_abort] section.
 import logging
 
@@ -35,6 +42,7 @@ class HomingAbort:
         self.active_hmove = None
         self.orig_cancel = None
         self.retry_timer = None
+        self.pheaters = None
         self.printer.register_event_handler(
             "homing:homing_move_begin", self._handle_move_begin)
         self.printer.register_event_handler(
@@ -59,12 +67,27 @@ class HomingAbort:
                         "Probing aborted by cancel request")
                 return orig_probing_move(mcu_probe, pos, speed)
             phoming.probing_move = probing_move
+        self.pheaters = self.printer.lookup_object('heaters', None)
+        if self.pheaters is not None:
+            orig_wait = self.pheaters._wait_for_temperature
+            def wait_for_temperature(heater):
+                if not self.cancel_pending:
+                    orig_wait(heater)
+                if self.cancel_pending:
+                    raise self.printer.command_error(
+                        "Heat wait aborted by cancel request")
+            self.pheaters._wait_for_temperature = wait_for_temperature
 
     def _handle_cancel_request(self, web_request):
         self.cancel_pending = True
         try:
             if self.active_hmove is not None:
                 self._start_abort(self.active_hmove)
+            ph = self.pheaters
+            if ph is not None and (
+                    getattr(ph, 'bed_temperature_wait', False)
+                    or getattr(ph, 'extruder_temperature_wait', False)):
+                ph.can_break = True
             # Blocks until CANCEL_PRINT has run.
             self.orig_cancel(web_request)
         finally:

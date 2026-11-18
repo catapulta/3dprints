@@ -45,9 +45,15 @@ can't be interrupted. The module wraps `homing.probing_move` instead: while a
 cancel is pending, the next probe point fails with "Probing aborted by cancel
 request", so the mesh stops after the point in progress.
 
-Scope: homing moves and the gaps between probe points. A cancel during a heat
-wait, dwell, ordinary move, `ACCURATE_HOME_Z` or nozzle wipe still waits for
-that command to finish. A `CANCEL_PRINT` typed in the console
+Heat waits (`M109`, `M190`) poll Creality's `can_break` flag in `heaters.py`
+once a second, the flag its `breakheater` webhook sets. A cancel sets it, and
+the module turns the early return into "Heat wait aborted by cancel request",
+so the macro stops instead of continuing at the wrong temperature.
+`END_PRINT`, run by `CANCEL_PRINT`, turns the heaters off.
+
+Scope: homing moves, the gaps between probe points, and `M109`/`M190` waits.
+A cancel during `TEMPERATURE_WAIT`, a dwell, an ordinary move,
+`ACCURATE_HOME_Z` or the nozzle wipe still waits for that command to finish. A `CANCEL_PRINT` typed in the console
 bypasses the webhook and is not covered.
 
 Install or re-apply after a firmware update:
