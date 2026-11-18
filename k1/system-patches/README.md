@@ -51,10 +51,13 @@ the module turns the early return into "Heat wait aborted by cancel request",
 so the macro stops instead of continuing at the wrong temperature.
 `END_PRINT`, run by `CANCEL_PRINT`, turns the heaters off.
 
-Scope: homing moves, the gaps between probe points, and `M109`/`M190` waits.
-A cancel during `TEMPERATURE_WAIT`, a dwell, an ordinary move,
-`ACCURATE_HOME_Z` or the nozzle wipe still waits for that command to finish. A `CANCEL_PRINT` typed in the console
-bypasses the webhook and is not covered.
+Scope: X/Y homing, the gaps between probe points, and `M109`/`M190` waits.
+`G28 Z` runs prtouch_v2's closed `run_G28_Z()` (self-test plus three bed
+descents onto the nozzle), which never fires the homing-move events, so a
+cancel during Z homing waits for it to finish. A cancel during
+`TEMPERATURE_WAIT`, a dwell, an ordinary move, `ACCURATE_HOME_Z` or the nozzle
+wipe also waits for that command to finish. A `CANCEL_PRINT` typed in the
+console bypasses the webhook and is not covered.
 
 Install or re-apply after a firmware update:
 
