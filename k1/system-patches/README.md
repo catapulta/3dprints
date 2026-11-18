@@ -22,3 +22,31 @@ Re-apply after a firmware update:
 The stale `.pyc` must go, otherwise Klipper keeps running the old bytecode.
 
 Symptom that the patch is gone: the bed stops going above 100C.
+
+## homing_abort.py
+
+`/usr/share/klipper/klippy/extras/homing_abort.py` (new file, loaded by the
+`[homing_abort]` section in `printer.cfg`)
+
+G28 holds the gcode mutex until homing finishes, so a cancel from Mainsail or
+anything else using Moonraker's cancel API normally waits out the whole homing
+sequence and the rest of the running macro. The module wraps Klippy's `pause_resume/cancel`
+webhook, the endpoint Moonraker's cancel calls. While a cancel is pending it
+fires the active homing move's trsync with the host-request reason, the same
+MCU path an endstop hit takes. The steppers stop, the TMC homing-end handlers
+run, and G28 fails with "No trigger on <axis> after full movement" (preceded by
+"Homing aborted by cancel request"). That error ends the print, then the queued
+`CANCEL_PRINT` runs. Klipper stays up; no `FIRMWARE_RESTART`. Axes are left
+unhomed.
+
+Scope: only homing moves. A cancel during a heat wait, dwell or ordinary move
+still waits for that command to finish. A `CANCEL_PRINT` typed in the console
+bypasses the webhook and is not covered.
+
+Install or re-apply after a firmware update:
+
+    scp system-patches/homing_abort.py k1:/usr/share/klipper/klippy/extras/homing_abort.py
+    ssh k1 /etc/init.d/S55klipper_service restart
+
+Symptom that the module is gone: Klipper fails to start with an unknown
+`[homing_abort]` config section.
