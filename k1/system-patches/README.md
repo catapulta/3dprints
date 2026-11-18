@@ -39,8 +39,15 @@ run, and G28 fails with "No trigger on <axis> after full movement" (preceded by
 `CANCEL_PRINT` runs. Klipper stays up; no `FIRMWARE_RESTART`. Axes are left
 unhomed.
 
-Scope: only homing moves. A cancel during a heat wait, dwell or ordinary move
-still waits for that command to finish. A `CANCEL_PRINT` typed in the console
+Probing (KAMP's `BED_MESH_CALIBRATE`) runs inside prtouch_v2's closed
+`run_G29_Z()`, which never fires the homing-move events, so a probe in progress
+can't be interrupted. The module wraps `homing.probing_move` instead: while a
+cancel is pending, the next probe point fails with "Probing aborted by cancel
+request", so the mesh stops after the point in progress.
+
+Scope: homing moves and the gaps between probe points. A cancel during a heat
+wait, dwell, ordinary move, `ACCURATE_HOME_Z` or nozzle wipe still waits for
+that command to finish. A `CANCEL_PRINT` typed in the console
 bypasses the webhook and is not covered.
 
 Install or re-apply after a firmware update:

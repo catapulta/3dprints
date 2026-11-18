@@ -13,6 +13,13 @@
 # CANCEL_PRINT runs as usual. Any homing move that starts while the cancel
 # is still pending is stopped the same way.
 #
+# Probing with prtouch_v2 runs inside Creality's closed run_G29_Z() and
+# never fires the homing_move events, so an in-flight probe can't be
+# interrupted. Instead homing.probing_move is wrapped: while a cancel is
+# pending, the next probe point raises a command error before it starts, so
+# BED_MESH_CALIBRATE (KAMP) stops after the point in progress. probe.py's
+# gcode:command_error handler then ends the multi-probe session.
+#
 # Config: add an empty [homing_abort] section.
 import logging
 
@@ -43,6 +50,15 @@ class HomingAbort:
             logging.info("homing_abort: no pause_resume/cancel endpoint")
             return
         endpoints["pause_resume/cancel"] = self._handle_cancel_request
+        phoming = self.printer.lookup_object('homing', None)
+        if phoming is not None:
+            orig_probing_move = phoming.probing_move
+            def probing_move(mcu_probe, pos, speed):
+                if self.cancel_pending:
+                    raise self.printer.command_error(
+                        "Probing aborted by cancel request")
+                return orig_probing_move(mcu_probe, pos, speed)
+            phoming.probing_move = probing_move
 
     def _handle_cancel_request(self, web_request):
         self.cancel_pending = True
