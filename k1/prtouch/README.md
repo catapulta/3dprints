@@ -25,13 +25,18 @@ to move out of `extras/`:
     scp prtouch/prtouch_v1_wrapper.py k1:/usr/share/klipper/klippy/extras/prtouch_v1_wrapper.py
     ssh k1 /etc/init.d/S55klipper_service restart
 
-Restore the stock module:
+The patched loader (`k1/system-patches/prtouch_v2.py`) drops the import of
+Creality's unused v2 module, so its `.so` leaves `extras/` too and no closed
+probe code remains in Klipper.
 
-    ssh k1 'E=/usr/share/klipper/klippy/extras; rm $E/prtouch_v1_wrapper.py $E/prtouch_v1_wrapper.pyc; mv /usr/data/prtouch_stock/prtouch_v1_wrapper.cpython-38-mipsel-linux-gnu.so $E/; /etc/init.d/S55klipper_service restart'
+Restore the stock modules and loader:
 
-A Creality firmware update puts the `.so` back, and the `.so` wins over the
-`.py`. `/usr/data/prtouch_stock/` on the printer holds the stock `.so` and
-the private archive (below).
+    scp system-patches/prtouch_v2.py.orig k1:/usr/share/klipper/klippy/extras/prtouch_v2.py
+    ssh k1 'E=/usr/share/klipper/klippy/extras; rm $E/prtouch_v1_wrapper.py $E/prtouch_v1_wrapper.pyc $E/prtouch_v2.pyc; mv /usr/data/prtouch_stock/*.so $E/; /etc/init.d/S55klipper_service restart'
+
+A Creality firmware update puts both `.so` files and the stock loader back, and
+the `.so` wins over the `.py`. `/usr/data/prtouch_stock/` on the printer holds
+both stock `.so` files and the private archive (below).
 
 ## Verification
 

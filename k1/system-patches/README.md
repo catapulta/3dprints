@@ -26,6 +26,24 @@ The stale `.pyc` must go, otherwise Klipper keeps running the old bytecode.
 
 Symptom that the patch is gone: the bed stops going above 100C.
 
+## prtouch_v2.py
+
+`/usr/share/klipper/klippy/extras/prtouch_v2.py`
+
+The `[prtouch_v2]` loader imports both of Creality's closed probe modules and
+builds the one `pr_version` selects; the K1 uses `pr_version: 1`. The patch
+drops the import of the unused `prtouch_v2_wrapper` `.so` and makes any other
+`pr_version` a config error, so the `.so` can leave `extras/`. It sits in
+`/usr/data/prtouch_stock/` on the printer.
+
+Files here: the patched `prtouch_v2.py`, the untouched `prtouch_v2.py.orig`,
+and `prtouch_v2.py.patch`.
+
+Re-apply after a firmware update (together with `k1/prtouch/`):
+
+    scp system-patches/prtouch_v2.py k1:/usr/share/klipper/klippy/extras/prtouch_v2.py
+    ssh k1 'E=/usr/share/klipper/klippy/extras; rm $E/prtouch_v2.pyc; mv $E/prtouch_v2_wrapper.cpython-38-mipsel-linux-gnu.so /usr/data/prtouch_stock/; /etc/init.d/S55klipper_service restart'
+
 ## homing_abort.py
 
 `/usr/share/klipper/klippy/extras/homing_abort.py` (new file, loaded by the
