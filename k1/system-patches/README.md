@@ -44,6 +44,26 @@ Re-apply after a firmware update (together with `k1/prtouch/`):
     scp system-patches/prtouch_v2.py k1:/usr/share/klipper/klippy/extras/prtouch_v2.py
     ssh k1 'E=/usr/share/klipper/klippy/extras; rm $E/prtouch_v2.pyc; mv $E/prtouch_v2_wrapper.cpython-38-mipsel-linux-gnu.so /usr/data/prtouch_stock/; /etc/init.d/S55klipper_service restart'
 
+## S60wifi_pm
+
+`/usr/data/opt/etc/init.d/S60wifi_pm` (Entware startup script)
+
+The Wi-Fi chip boots in Broadcom's fast power-save mode (`wl PM 2`): it dozes
+between beacons, so on a weak link replies arrive hundreds of ms late, packets
+drop, and Mainsail's websocket misses Moonraker's pings and disconnects. With
+power save off (`wl PM 0`), round trips on the LAN stay in the tens of ms.
+
+The script runs `wl PM 0` at boot. It lives in Entware's `init.d` under
+`/usr/data`, which survives firmware updates; `/etc/init.d` is on the system
+overlay and does not.
+
+Install:
+
+    scp system-patches/S60wifi_pm k1:/usr/data/opt/etc/init.d/S60wifi_pm
+    ssh k1 'chmod +x /usr/data/opt/etc/init.d/S60wifi_pm; /usr/data/opt/etc/init.d/S60wifi_pm start'
+
+Check: `ssh k1 wl PM` prints `0`.
+
 ## homing_abort.py
 
 `/usr/share/klipper/klippy/extras/homing_abort.py` (new file, loaded by the

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Turn off Wi-Fi power saving on the K1's Broadcom chip (cywdhd driver).
+# Run at boot by Entware's rc.unslung, after S44wifi_bcm_up brings wlan0 up.
+
+case "$1" in
+	start|restart|reconfigure)
+		/usr/bin/wl PM 0
+		;;
+	check)
+		/usr/bin/wl PM
+		;;
+esac
